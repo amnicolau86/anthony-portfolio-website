@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import styles from '@/app/styles/layout.module.css';
 import { Project } from '@/data/projects';
@@ -80,7 +80,7 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
         `;
         
         // Track container for cleanup
-        let containerRef = container;
+        let containerRef: HTMLDivElement | null = container;
         
         // Create iframe with proper fullscreen parameters and all permissions
         const iframe = document.createElement('iframe');
@@ -211,7 +211,7 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
               iframeDoc.addEventListener('touchstart', handleTouchStart, { passive: true });
               iframeDoc.addEventListener('touchend', handleTouchEnd, { passive: true });
             }
-          } catch (e) {
+          } catch (_) {
             console.log('[Video Debug] Cannot access iframe content (cross-origin)');
           }
         };
