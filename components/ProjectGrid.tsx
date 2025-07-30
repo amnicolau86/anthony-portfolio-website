@@ -174,12 +174,12 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
         let touchStartX = 0;
         let touchStartY = 0;
         
-        const handleTouchStart = (e) => {
+        const handleTouchStart = (e: TouchEvent) => {
           touchStartX = e.touches[0].clientX;
           touchStartY = e.touches[0].clientY;
         };
         
-        const handleTouchEnd = (e) => {
+        const handleTouchEnd = (e: TouchEvent) => {
           const touchEndX = e.changedTouches[0].clientX;
           const touchEndY = e.changedTouches[0].clientY;
           const deltaX = touchEndX - touchStartX;
