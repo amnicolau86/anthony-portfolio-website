@@ -187,7 +187,7 @@ export const projects: Project[] = [
     type: 'PRODUCER',
     subtitle: 'CONTENT SERIES',
     thumbnail: '/images/projects/spotify-road-views.jpg',
-    vimeoId: '265839981',
+    vimeoId: '515548789',
     categories: ['producer', 'commercial'],
   },
   {
@@ -196,7 +196,7 @@ export const projects: Project[] = [
     type: 'DIRECTOR',
     subtitle: 'DOCUMENTARY',
     thumbnail: '/images/projects/dandy-farmer.jpg',
-    vimeoId: '761643356/9d2bf4859d',
+    vimeoId: '761643356',
     categories: ['director', 'narrative'],
   },
 ];
