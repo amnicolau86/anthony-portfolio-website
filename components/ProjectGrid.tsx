@@ -79,18 +79,8 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
           justify-content: center;
         `;
         
-        // Add loading indicator
-        const loadingDiv = document.createElement('div');
-        loadingDiv.innerHTML = 'Loading video...';
-        loadingDiv.style.cssText = `
-          color: white;
-          font-size: 18px;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        `;
-        container.appendChild(loadingDiv);
+        // Track container for cleanup
+        let containerRef = container;
         
         // Create iframe with proper fullscreen parameters and all permissions
         const iframe = document.createElement('iframe');
@@ -120,8 +110,9 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
         const handleVideoError = () => {
           console.log('[Video Debug] Falling back to Vimeo.com');
           // Remove container
-          if (container.parentNode) {
-            document.body.removeChild(container);
+          if (containerRef && containerRef.parentNode) {
+            containerRef.parentNode.removeChild(containerRef);
+            containerRef = null;
           }
           
           // Open Vimeo directly
@@ -140,13 +131,35 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
           }
         }, 10000);
         
-        // Success handler
-        iframe.onload = () => {
-          console.log('[Video Debug] Iframe loaded successfully');
-          hasLoaded = true;
+        
+        // Function to safely remove container
+        const removeContainer = () => {
           clearTimeout(loadTimeout);
-          if (loadingDiv.parentNode) {
-            loadingDiv.remove();
+          
+          // Remove event listeners
+          window.removeEventListener('popstate', handlePopState);
+          if (containerRef) {
+            containerRef.removeEventListener('touchstart', handleTouchStart);
+            containerRef.removeEventListener('touchend', handleTouchEnd);
+          }
+          
+          // Remove container from DOM
+          if (containerRef && containerRef.parentNode) {
+            containerRef.parentNode.removeChild(containerRef);
+            containerRef = null;
+          }
+          setActiveOverlay(null);
+          
+          // Clean up history state
+          if (window.history.state && window.history.state.videoOpen) {
+            window.history.back();
+          }
+        };
+        
+        // Handle browser back button
+        const handlePopState = (e) => {
+          if (!e.state || !e.state.videoOpen) {
+            removeContainer();
           }
         };
         
@@ -161,12 +174,12 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
         let touchStartX = 0;
         let touchStartY = 0;
         
-        container.addEventListener('touchstart', (e) => {
+        const handleTouchStart = (e) => {
           touchStartX = e.touches[0].clientX;
           touchStartY = e.touches[0].clientY;
-        });
+        };
         
-        container.addEventListener('touchend', (e) => {
+        const handleTouchEnd = (e) => {
           const touchEndX = e.changedTouches[0].clientX;
           const touchEndY = e.changedTouches[0].clientY;
           const deltaX = touchEndX - touchStartX;
@@ -174,23 +187,38 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
           
           // Detect right swipe (back gesture)
           if (deltaX > 100 && deltaY < 50) {
-            clearTimeout(loadTimeout);
-            document.body.removeChild(container);
-            setActiveOverlay(null);
+            removeContainer();
           }
-        });
+        };
+        
+        // Add touch listeners to container
+        container.addEventListener('touchstart', handleTouchStart, { passive: true });
+        container.addEventListener('touchend', handleTouchEnd, { passive: true });
         
         container.appendChild(iframe);
         document.body.appendChild(container);
         
-        // Request fullscreen on the iframe after a slight delay
-        setTimeout(() => {
-          if (iframe.requestFullscreen) {
-            iframe.requestFullscreen().catch(err => {
-              console.log('[Video Debug] Fullscreen request failed:', err);
-            });
+        // Add touch listeners to iframe after it loads
+        iframe.onload = () => {
+          console.log('[Video Debug] Iframe loaded successfully');
+          hasLoaded = true;
+          clearTimeout(loadTimeout);
+          
+          // Try to add touch listeners to iframe content
+          try {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            if (iframeDoc) {
+              iframeDoc.addEventListener('touchstart', handleTouchStart, { passive: true });
+              iframeDoc.addEventListener('touchend', handleTouchEnd, { passive: true });
+            }
+          } catch (e) {
+            console.log('[Video Debug] Cannot access iframe content (cross-origin)');
           }
-        }, 100);
+        };
+        
+        // Add to browser history for back button support
+        window.history.pushState({ videoOpen: true }, '');
+        window.addEventListener('popstate', handlePopState);
         
       } catch (error) {
         console.error('[Video Debug] Critical error in video handler:', error);
