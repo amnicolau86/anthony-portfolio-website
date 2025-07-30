@@ -306,6 +306,44 @@
   border: none;
   color: var(--text-primary);
   cursor: pointer;
+  font-size: 28px;
+  padding: 12px;
+  min-width: 48px;
+  min-height: 48px;
+  line-height: 1;
+  text-align: center;
+}
+
+/* Mobile menu */
+.mobileMenu {
+  position: fixed;
+  top: var(--nav-height);
+  left: 0;
+  right: 0;
+  background: rgba(48, 45, 45, 0.98);
+  backdrop-filter: blur(8px);
+  padding: 32px var(--padding-mobile);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: calc(var(--z-nav) - 1);
+}
+
+.mobileMenuLink {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding: 12px 0;
+  transition: color var(--transition-fast);
+}
+
+.mobileMenuLink:hover,
+.mobileMenuLinkActive {
+  color: var(--text-primary);
 }
 
 /* Modal styles */

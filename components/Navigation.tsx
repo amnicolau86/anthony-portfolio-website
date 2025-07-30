@@ -11,6 +11,7 @@ function NavigationContent() {
   const searchParams = useSearchParams();
   const activeFilter = searchParams.get('filter');
   const [isWorkHovered, setIsWorkHovered] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleFilterClick = (filter: string) => {
     if (activeFilter === filter) {
@@ -27,7 +28,11 @@ function NavigationContent() {
           ANTHONY NICOLAU
         </Link>
         
-        <button className={styles.menuButton}>
+        <button 
+          className={styles.menuButton}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Menu"
+        >
           ☰
         </button>
         
@@ -78,6 +83,25 @@ function NavigationContent() {
           </Link>
         </div>
       </div>
+      
+      {isMenuOpen && (
+        <div className={styles.mobileMenu}>
+          <Link 
+            href="/" 
+            className={`${styles.mobileMenuLink} ${pathname === '/' ? styles.mobileMenuLinkActive : ''}`}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            WORK
+          </Link>
+          <Link 
+            href="/about" 
+            className={`${styles.mobileMenuLink} ${pathname === '/about' ? styles.mobileMenuLinkActive : ''}`}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            ABOUT
+          </Link>
+        </div>
+      )}
     </nav>
   );
 }

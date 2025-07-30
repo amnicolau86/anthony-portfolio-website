@@ -14,7 +14,15 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
   const router = useRouter();
 
   const handleProjectClick = (project: Project) => {
-    router.push(`/work/${project.id}`);
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+    
+    if (isMobile && project.vimeoId) {
+      // Open Vimeo directly in fullscreen on mobile
+      window.open(`https://vimeo.com/${project.vimeoId}`, '_blank');
+    } else {
+      // Keep existing modal behavior for desktop
+      router.push(`/work/${project.id}`);
+    }
   };
 
   const filteredProjects = activeFilter
