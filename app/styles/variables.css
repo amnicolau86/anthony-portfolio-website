@@ -1,0 +1,43 @@
+:root {
+  /* Spacing */
+  --padding-mobile: 24px;
+  --padding-tablet: 64px;
+  --padding-desktop: 100px;
+  --nav-height: 96px;
+  
+  /* About page specific spacing */
+  --about-spacing-mobile: 60px;
+  --about-spacing-tablet: 100px;
+  --about-spacing-desktop: 154px;
+  
+  /* Colors - Actual extracted values */
+  --bg-primary: #302d2d;
+  --bg-nav: #302d2d;
+  --bg-dark: #484646;
+  --bg-medium: #666360;
+  --bg-theater: #1a1818;
+  --text-primary: #d3d3d0;
+  --text-secondary: #a3a19c;
+  --text-overlay: #E8E6E6;
+  --text-theater: #E5E5E5;
+  --border-color: #484646;
+  --overlay-dark: rgba(0, 0, 0, 0.8);
+  --theater-bg-opacity: rgba(26, 24, 24, 0.98);
+  
+  /* Typography */
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-nav: 12px;
+  --font-size-about: 14px;
+  --line-height-relaxed: 1.75;
+  
+  /* Animations */
+  --scale-hover: 1.02;
+  --transition-fast: 300ms;
+  --transition-medium: 500ms;
+  --transition-slow: 700ms;
+  
+  /* Z-index */
+  --z-nav: 50;
+  --z-modal: 100;
+}
