@@ -64,7 +64,7 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
 
   return (
     <div className={styles.projectGrid}>
-      {filteredProjects.map((project) => (
+      {filteredProjects.map((project, index) => (
         <div
           key={project.id}
           className={styles.projectCard}
@@ -76,6 +76,9 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
             style={{ objectFit: 'cover' }}
+            quality={90}
+            priority={index < 6}
+            unoptimized={false}
           />
           <div className={styles.projectOverlay} />
           <div className={styles.projectInfo}>
