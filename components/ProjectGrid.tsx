@@ -13,78 +13,11 @@ interface ProjectGridProps {
 
 export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps) {
   const router = useRouter();
-  const preloadedVideos = useRef<Map<string, HTMLIFrameElement>>(new Map());
 
   // Filter projects first
   const filteredProjects = activeFilter
     ? projects.filter(project => project.categories?.includes(activeFilter as 'director' | 'producer' | 'narrative' | 'commercial'))
     : projects;
-
-  // Preload video function
-  const preloadVideo = (vimeoId: string) => {
-    const link = document.createElement('link');
-    link.rel = 'prefetch';
-    link.href = `https://player.vimeo.com/video/${vimeoId}`;
-    document.head.appendChild(link);
-  };
-
-  // Handle mouse enter to preload adjacent videos
-  const handleMouseEnter = (index: number) => {
-    // Preload previous video
-    const prevProject = filteredProjects[index - 1];
-    if (index > 0 && prevProject?.vimeoId) {
-      preloadVideo(prevProject.vimeoId);
-    }
-    // Preload next video
-    const nextProject = filteredProjects[index + 1];
-    if (index < filteredProjects.length - 1 && nextProject?.vimeoId) {
-      preloadVideo(nextProject.vimeoId);
-    }
-  };
-
-  // Cascading video preload effect
-  useEffect(() => {
-    const preloadVideoWithIframe = (project: Project) => {
-      if (!project.vimeoId) return;
-      
-      // Create hidden iframe to preload Vimeo player
-      const iframe = document.createElement('iframe');
-      iframe.src = project.vimeoHash 
-        ? `https://player.vimeo.com/video/${project.vimeoId}?h=${project.vimeoHash}`
-        : `https://player.vimeo.com/video/${project.vimeoId}`;
-      iframe.style.position = 'absolute';
-      iframe.style.width = '1px';
-      iframe.style.height = '1px';
-      iframe.style.opacity = '0';
-      iframe.style.pointerEvents = 'none';
-      iframe.setAttribute('aria-hidden', 'true');
-      iframe.setAttribute('tabindex', '-1');
-      document.body.appendChild(iframe);
-      
-      // Store reference for cleanup
-      preloadedVideos.current.set(project.id, iframe);
-    };
-
-    // Start cascading preload after images load
-    const startCascadingPreload = () => {
-      filteredProjects.forEach((project, index) => {
-        setTimeout(() => {
-          preloadVideoWithIframe(project);
-        }, index * 250); // 250ms between each video
-      });
-    };
-
-    // Wait 1 second for images to load, then start video preload
-    const timeoutId = setTimeout(startCascadingPreload, 1000);
-
-    // Cleanup on unmount or when filteredProjects change
-    return () => {
-      clearTimeout(timeoutId);
-      const videos = preloadedVideos.current;
-      videos.forEach(iframe => iframe.remove());
-      videos.clear();
-    };
-  }, [filteredProjects]);
 
   const handleProjectClick = (project: Project) => {
     // Save current scroll position
@@ -131,8 +64,8 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
         // Create iframe with proper fullscreen parameters and all permissions
         const iframe = document.createElement('iframe');
         const vimeoUrl = project.vimeoHash 
-          ? `https://player.vimeo.com/video/${project.vimeoId}?h=${project.vimeoHash}&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&fullscreen=1&playsinline=0`
-          : `https://player.vimeo.com/video/${project.vimeoId}?autoplay=1&autopause=0&background=0&fullscreen=1&playsinline=0`;
+          ? `https://player.vimeo.com/video/${project.vimeoId}?h=${project.vimeoHash}&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&muted=1&fullscreen=1&playsinline=0`
+          : `https://player.vimeo.com/video/${project.vimeoId}?autoplay=1&muted=1&autopause=0&background=0&fullscreen=1&playsinline=0`;
         
         console.log('[Video Debug] Iframe URL:', vimeoUrl);
         
@@ -250,7 +183,6 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
           key={project.id}
           className={styles.projectCard}
           onClick={() => handleProjectClick(project)}
-          onMouseEnter={() => handleMouseEnter(index)}
         >
           <Image
             src={project.thumbnail}

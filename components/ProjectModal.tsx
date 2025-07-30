@@ -74,13 +74,14 @@ export default function ProjectModal({
             <div className={styles.modalVideo}>
               <iframe
                 src={project.vimeoHash 
-                  ? `https://player.vimeo.com/video/${project.vimeoId}?h=${project.vimeoHash}&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&title=0&byline=0&portrait=0`
-                  : `https://player.vimeo.com/video/${project.vimeoId}?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&title=0&byline=0&portrait=0`
+                  ? `https://player.vimeo.com/video/${project.vimeoId}?h=${project.vimeoHash}&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&muted=1&title=0&byline=0&portrait=0`
+                  : `https://player.vimeo.com/video/${project.vimeoId}?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&muted=1&title=0&byline=0&portrait=0`
                 }
                 style={{ width: '100%', height: '100%' }}
                 frameBorder="0"
                 allow="autoplay; fullscreen"
                 allowFullScreen
+                loading="lazy"
               />
             </div>
           )}
