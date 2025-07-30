@@ -110,7 +110,7 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
         const handleVideoError = () => {
           console.log('[Video Debug] Falling back to Vimeo.com');
           // Remove container
-          if (containerRef && containerRef.parentNode) {
+          if (containerRef?.parentNode) {
             containerRef.parentNode.removeChild(containerRef);
             containerRef = null;
           }
@@ -144,27 +144,27 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
           }
           
           // Remove container from DOM
-          if (containerRef && containerRef.parentNode) {
+          if (containerRef?.parentNode) {
             containerRef.parentNode.removeChild(containerRef);
             containerRef = null;
           }
           setActiveOverlay(null);
           
           // Clean up history state
-          if (window.history.state && window.history.state.videoOpen) {
+          if ((window.history.state as { videoOpen?: boolean })?.videoOpen) {
             window.history.back();
           }
         };
         
         // Handle browser back button
         const handlePopState = (e: PopStateEvent) => {
-          if (!e.state || !e.state.videoOpen) {
+          if (!e.state || !(e.state as { videoOpen?: boolean }).videoOpen) {
             removeContainer();
           }
         };
         
         // Error handler
-        iframe.onerror = (error) => {
+        iframe.onerror = (error: Event | string) => {
           console.error('[Video Debug] Iframe error:', error);
           clearTimeout(loadTimeout);
           handleVideoError();
@@ -175,19 +175,23 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
         let touchStartY = 0;
         
         const handleTouchStart = (e: TouchEvent) => {
-          touchStartX = e.touches[0].clientX;
-          touchStartY = e.touches[0].clientY;
+          if (e.touches.length > 0) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+          }
         };
         
         const handleTouchEnd = (e: TouchEvent) => {
-          const touchEndX = e.changedTouches[0].clientX;
-          const touchEndY = e.changedTouches[0].clientY;
-          const deltaX = touchEndX - touchStartX;
-          const deltaY = Math.abs(touchEndY - touchStartY);
+          if (e.changedTouches.length > 0) {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = Math.abs(touchEndY - touchStartY);
           
-          // Detect right swipe (back gesture)
-          if (deltaX > 100 && deltaY < 50) {
-            removeContainer();
+            // Detect right swipe (back gesture)
+            if (deltaX > 100 && deltaY < 50) {
+              removeContainer();
+            }
           }
         };
         
@@ -206,7 +210,7 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
           
           // Try to add touch listeners to iframe content
           try {
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
             if (iframeDoc) {
               iframeDoc.addEventListener('touchstart', handleTouchStart, { passive: true });
               iframeDoc.addEventListener('touchend', handleTouchEnd, { passive: true });
