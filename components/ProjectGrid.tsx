@@ -157,7 +157,7 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
         };
         
         // Handle browser back button
-        const handlePopState = (e) => {
+        const handlePopState = (e: PopStateEvent) => {
           if (!e.state || !e.state.videoOpen) {
             removeContainer();
           }
@@ -211,7 +211,7 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
               iframeDoc.addEventListener('touchstart', handleTouchStart, { passive: true });
               iframeDoc.addEventListener('touchend', handleTouchEnd, { passive: true });
             }
-          } catch (_) {
+          } catch {
             console.log('[Video Debug] Cannot access iframe content (cross-origin)');
           }
         };
