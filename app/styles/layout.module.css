@@ -320,30 +320,70 @@
   top: var(--nav-height);
   left: 0;
   right: 0;
-  background: rgba(48, 45, 45, 0.98);
-  backdrop-filter: blur(8px);
-  padding: 32px var(--padding-mobile);
+  background: rgba(48, 45, 45, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 20px 24px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   z-index: calc(var(--z-nav) - 1);
+  
+  /* Add slide-down animation */
+  animation: slideDown 0.3s ease-out;
+  transform-origin: top;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .mobileMenuLink {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 18px;
-  font-weight: 400;
-  letter-spacing: 0.1em;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--text-secondary);
+  transition: color 0.2s ease;
   padding: 12px 0;
-  transition: color var(--transition-fast);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mobileMenuLink:last-child {
+  border-bottom: none;
 }
 
 .mobileMenuLink:hover,
 .mobileMenuLinkActive {
   color: var(--text-primary);
+}
+
+.mobileMenuLink:active {
+  color: var(--text-primary);
+}
+
+/* Animation for menu closing */
+.mobileMenuClosing {
+  animation: slideUp 0.2s ease-in;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
 }
 
 /* Modal styles */
