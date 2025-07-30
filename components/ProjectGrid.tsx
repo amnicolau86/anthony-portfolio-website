@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import styles from '@/app/styles/layout.module.css';
 import { Project } from '@/data/projects';
@@ -13,13 +13,44 @@ interface ProjectGridProps {
 
 export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps) {
   const router = useRouter();
+  const [activeOverlay, setActiveOverlay] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Filter projects first
   const filteredProjects = activeFilter
     ? projects.filter(project => project.categories?.includes(activeFilter as 'director' | 'producer' | 'narrative' | 'commercial'))
     : projects;
 
-  const handleProjectClick = (project: Project) => {
+  const handleProjectClick = (project: Project, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    // Mobile two-tap interaction
+    if (isMobile) {
+      if (activeOverlay === project.id) {
+        // Second tap - open video
+        handleVideoOpen(project);
+      } else {
+        // First tap - show overlay
+        setActiveOverlay(project.id);
+      }
+      return;
+    }
+    
+    // Desktop - direct to video
+    handleVideoOpen(project);
+  };
+
+  const handleVideoOpen = (project: Project) => {
     // Save current scroll position
     if (typeof window !== 'undefined') {
       sessionStorage.setItem('scrollPosition', window.scrollY.toString());
@@ -146,7 +177,31 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
         closeBtn.onclick = () => {
           clearTimeout(loadTimeout);
           document.body.removeChild(container);
+          setActiveOverlay(null);
         };
+        
+        // Add swipe detection for back gesture
+        let touchStartX = 0;
+        let touchStartY = 0;
+        
+        container.addEventListener('touchstart', (e) => {
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
+        });
+        
+        container.addEventListener('touchend', (e) => {
+          const touchEndX = e.changedTouches[0].clientX;
+          const touchEndY = e.changedTouches[0].clientY;
+          const deltaX = touchEndX - touchStartX;
+          const deltaY = Math.abs(touchEndY - touchStartY);
+          
+          // Detect right swipe (back gesture)
+          if (deltaX > 100 && deltaY < 50) {
+            clearTimeout(loadTimeout);
+            document.body.removeChild(container);
+            setActiveOverlay(null);
+          }
+        });
         
         container.appendChild(iframe);
         container.appendChild(closeBtn);
@@ -176,13 +231,27 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
     }
   };
 
+  // Close overlay when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (isMobile) {
+        setActiveOverlay(null);
+      }
+    };
+    
+    if (isMobile && activeOverlay) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [isMobile, activeOverlay]);
+
   return (
     <div className={styles.projectGrid}>
       {filteredProjects.map((project, index) => (
         <div
           key={project.id}
-          className={styles.projectCard}
-          onClick={() => handleProjectClick(project)}
+          className={`${styles.projectCard} ${isMobile && activeOverlay === project.id ? styles.projectCardActive : ''}`}
+          onClick={(e) => handleProjectClick(project, e)}
         >
           <Image
             src={project.thumbnail}
@@ -197,8 +266,8 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
           <div className={styles.projectOverlay} />
           <div className={styles.projectInfo}>
             <h3 className={styles.projectTitle}>{project.title}</h3>
-            <p className={styles.projectRole}>{project.type}</p>
             <p className={styles.projectType}>{project.subtitle}</p>
+            <p className={styles.projectRole}>{project.type}</p>
           </div>
         </div>
       ))}

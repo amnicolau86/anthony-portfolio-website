@@ -267,6 +267,15 @@
   opacity: 1;
 }
 
+/* Mobile active state */
+.projectCardActive .projectOverlay {
+  opacity: 1;
+}
+
+.projectCardActive .projectInfo {
+  opacity: 1;
+}
+
 .projectTitle {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 26px;
