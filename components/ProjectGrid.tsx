@@ -13,6 +13,33 @@ interface ProjectGridProps {
 export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps) {
   const router = useRouter();
 
+  // Filter projects first
+  const filteredProjects = activeFilter
+    ? projects.filter(project => project.categories?.includes(activeFilter as 'director' | 'producer' | 'narrative' | 'commercial'))
+    : projects;
+
+  // Preload video function
+  const preloadVideo = (vimeoId: string) => {
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.href = `https://player.vimeo.com/video/${vimeoId}`;
+    document.head.appendChild(link);
+  };
+
+  // Handle mouse enter to preload adjacent videos
+  const handleMouseEnter = (index: number) => {
+    // Preload previous video
+    const prevProject = filteredProjects[index - 1];
+    if (index > 0 && prevProject?.vimeoId) {
+      preloadVideo(prevProject.vimeoId);
+    }
+    // Preload next video
+    const nextProject = filteredProjects[index + 1];
+    if (index < filteredProjects.length - 1 && nextProject?.vimeoId) {
+      preloadVideo(nextProject.vimeoId);
+    }
+  };
+
   const handleProjectClick = (project: Project) => {
     const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
     
@@ -78,10 +105,6 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
     }
   };
 
-  const filteredProjects = activeFilter
-    ? projects.filter(project => project.categories?.includes(activeFilter as 'director' | 'producer' | 'narrative' | 'commercial'))
-    : projects;
-
   return (
     <div className={styles.projectGrid}>
       {filteredProjects.map((project, index) => (
@@ -89,6 +112,7 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
           key={project.id}
           className={styles.projectCard}
           onClick={() => handleProjectClick(project)}
+          onMouseEnter={() => handleMouseEnter(index)}
         >
           <Image
             src={project.thumbnail}
@@ -98,8 +122,7 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
             style={{ objectFit: 'cover' }}
             quality={85}
             loading={index < 6 ? "eager" : "lazy"}
-            placeholder="blur"
-            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+            priority={index < 3}
           />
           <div className={styles.projectOverlay} />
           <div className={styles.projectInfo}>
