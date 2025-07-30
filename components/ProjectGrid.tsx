@@ -151,8 +151,30 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
         iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms allow-presentation');
         iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
         
-        let loadTimeout: NodeJS.Timeout;
         let hasLoaded = false;
+        
+        const handleVideoError = () => {
+          console.log('[Video Debug] Falling back to Vimeo.com');
+          // Remove container
+          if (container.parentNode) {
+            document.body.removeChild(container);
+          }
+          
+          // Open Vimeo directly
+          const vimeoWebUrl = project.vimeoHash 
+            ? `https://vimeo.com/${project.vimeoId}/${project.vimeoHash}`
+            : `https://vimeo.com/${project.vimeoId}`;
+          
+          window.open(vimeoWebUrl, '_blank');
+        };
+        
+        // Timeout fallback (10 seconds)
+        const loadTimeout = setTimeout(() => {
+          if (!hasLoaded) {
+            console.error('[Video Debug] Iframe load timeout');
+            handleVideoError();
+          }
+        }, 10000);
         
         // Success handler
         iframe.onload = () => {
@@ -169,29 +191,6 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
           console.error('[Video Debug] Iframe error:', error);
           clearTimeout(loadTimeout);
           handleVideoError();
-        };
-        
-        // Timeout fallback (10 seconds)
-        loadTimeout = setTimeout(() => {
-          if (!hasLoaded) {
-            console.error('[Video Debug] Iframe load timeout');
-            handleVideoError();
-          }
-        }, 10000);
-        
-        const handleVideoError = () => {
-          console.log('[Video Debug] Falling back to Vimeo.com');
-          // Remove container
-          if (container.parentNode) {
-            document.body.removeChild(container);
-          }
-          
-          // Open Vimeo directly
-          const vimeoWebUrl = project.vimeoHash 
-            ? `https://vimeo.com/${project.vimeoId}/${project.vimeoHash}`
-            : `https://vimeo.com/${project.vimeoId}`;
-          
-          window.open(vimeoWebUrl, '_blank');
         };
         
         // Add close button
