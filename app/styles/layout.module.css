@@ -393,7 +393,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.95);
+  background-color: rgba(26, 24, 24, 0.98);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -429,25 +429,22 @@
 
 .modalClose {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  width: 44px;
-  height: 44px;
-  background: rgba(0, 0, 0, 0.8);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  top: 32px;
+  right: 32px;
+  background: none;
+  border: none;
   color: white;
-  font-size: 24px;
-  border-radius: 50%;
+  font-size: 36px;
+  font-weight: 300;
   cursor: pointer;
   z-index: calc(var(--z-modal) + 1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.3s;
 }
 
 .modalClose:hover {
-  opacity: 1;
+  color: var(--text-secondary);
 }
 
 .modalNav {
@@ -482,8 +479,6 @@
   .modalClose {
     top: 20px;
     right: 20px;
-    background: rgba(0, 0, 0, 0.7);
-    border-radius: 4px;
   }
   
   .modalContent {
