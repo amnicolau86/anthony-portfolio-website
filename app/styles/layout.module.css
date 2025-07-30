@@ -364,25 +364,23 @@
   position: relative;
   width: 90%;
   max-width: 1200px;
-  margin: auto;
+  height: 90vh;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  height: 100vh;
+  margin: auto;
 }
 
 .modalVideoWrapper {
   position: relative;
   width: 100%;
-  max-width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  max-height: 70vh;
+  aspect-ratio: 16/9;
 }
 
 .modalVideo {
   width: 100%;
-  max-height: 80vh;
+  height: 100%;
   aspect-ratio: 16/9;
 }
 
@@ -432,22 +430,26 @@
   right: -60px;
 }
 
-/* On smaller screens, position arrows over the video */
-@media (max-width: 1400px) {
-  .modalPrev {
-    left: 20px;
+/* Smaller screens modal adjustments */
+@media (max-width: 768px) {
+  .modalVideoWrapper {
+    max-height: 50vh;
   }
   
-  .modalNext {
+  .modalClose {
+    top: 20px;
     right: 20px;
+  }
+  
+  .modalContent {
+    width: 95%;
+    height: 95vh;
   }
 }
 
 .modalInfo {
-  position: absolute;
-  bottom: 125px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  margin-top: 20px;
   text-align: center;
   color: white;
 }

@@ -23,7 +23,6 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
       {/* Render the modal on top */}
       <ProjectModal 
         project={project} 
-        projects={projects}
         isDirectAccess={true}
       />
     </>
