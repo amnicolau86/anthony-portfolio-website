@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import styles from '@/app/styles/layout.module.css';
 import { Project } from '@/data/projects';
@@ -12,6 +13,7 @@ interface ProjectGridProps {
 
 export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps) {
   const router = useRouter();
+  const preloadedVideos = useRef<Map<string, HTMLIFrameElement>>(new Map());
 
   // Filter projects first
   const filteredProjects = activeFilter
@@ -39,6 +41,50 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
       preloadVideo(nextProject.vimeoId);
     }
   };
+
+  // Cascading video preload effect
+  useEffect(() => {
+    const preloadVideoWithIframe = (project: Project) => {
+      if (!project.vimeoId) return;
+      
+      // Create hidden iframe to preload Vimeo player
+      const iframe = document.createElement('iframe');
+      iframe.src = project.vimeoHash 
+        ? `https://player.vimeo.com/video/${project.vimeoId}?h=${project.vimeoHash}`
+        : `https://player.vimeo.com/video/${project.vimeoId}`;
+      iframe.style.position = 'absolute';
+      iframe.style.width = '1px';
+      iframe.style.height = '1px';
+      iframe.style.opacity = '0';
+      iframe.style.pointerEvents = 'none';
+      iframe.setAttribute('aria-hidden', 'true');
+      iframe.setAttribute('tabindex', '-1');
+      document.body.appendChild(iframe);
+      
+      // Store reference for cleanup
+      preloadedVideos.current.set(project.id, iframe);
+    };
+
+    // Start cascading preload after images load
+    const startCascadingPreload = () => {
+      filteredProjects.forEach((project, index) => {
+        setTimeout(() => {
+          preloadVideoWithIframe(project);
+        }, index * 250); // 250ms between each video
+      });
+    };
+
+    // Wait 1 second for images to load, then start video preload
+    const timeoutId = setTimeout(startCascadingPreload, 1000);
+
+    // Cleanup on unmount or when filteredProjects change
+    return () => {
+      clearTimeout(timeoutId);
+      const videos = preloadedVideos.current;
+      videos.forEach(iframe => iframe.remove());
+      videos.clear();
+    };
+  }, [filteredProjects]);
 
   const handleProjectClick = (project: Project) => {
     // Save current scroll position
