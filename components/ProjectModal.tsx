@@ -25,6 +25,15 @@ export default function ProjectModal({
       // If accessed directly, go back to home
       router.push('/');
     }
+    
+    // Restore scroll position after navigation
+    setTimeout(() => {
+      const savedPosition = sessionStorage.getItem('scrollPosition');
+      if (savedPosition) {
+        window.scrollTo(0, parseInt(savedPosition));
+        sessionStorage.removeItem('scrollPosition');
+      }
+    }, 100);
   }, [onClose, router]);
 
 

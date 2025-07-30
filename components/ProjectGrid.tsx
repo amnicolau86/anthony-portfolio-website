@@ -41,6 +41,11 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
   };
 
   const handleProjectClick = (project: Project) => {
+    // Save current scroll position
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('scrollPosition', window.scrollY.toString());
+    }
+    
     const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
     
     if (isMobile && project.vimeoId) {
