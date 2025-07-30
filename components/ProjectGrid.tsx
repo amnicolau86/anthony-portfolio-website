@@ -17,41 +17,61 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
     const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
     
     if (isMobile && project.vimeoId) {
-      // Create a fullscreen iframe player instead of redirecting
+      // Create fullscreen container with black background
+      const container = document.createElement('div');
+      container.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: black;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      `;
+      
+      // Create iframe with proper fullscreen parameters
       const iframe = document.createElement('iframe');
-      iframe.src = `https://player.vimeo.com/video/${project.vimeoId}?autoplay=1&playsinline=0`;
-      iframe.style.position = 'fixed';
-      iframe.style.top = '0';
-      iframe.style.left = '0';
-      iframe.style.width = '100%';
-      iframe.style.height = '100%';
-      iframe.style.zIndex = '9999';
-      iframe.style.border = 'none';
+      iframe.src = `https://player.vimeo.com/video/${project.vimeoId}?autoplay=1&autopause=0&background=0&fullscreen=1&playsinline=0`;
+      iframe.style.cssText = `
+        width: 100%;
+        height: 100%;
+        border: none;
+      `;
       iframe.setAttribute('allowfullscreen', 'true');
-      iframe.setAttribute('allow', 'autoplay; fullscreen');
+      iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
       
       // Add close button
       const closeBtn = document.createElement('button');
       closeBtn.innerHTML = '×';
-      closeBtn.style.position = 'fixed';
-      closeBtn.style.top = '20px';
-      closeBtn.style.right = '20px';
-      closeBtn.style.zIndex = '10000';
-      closeBtn.style.background = 'rgba(0,0,0,0.5)';
-      closeBtn.style.color = 'white';
-      closeBtn.style.border = 'none';
-      closeBtn.style.fontSize = '30px';
-      closeBtn.style.width = '50px';
-      closeBtn.style.height = '50px';
-      closeBtn.style.borderRadius = '50%';
-      closeBtn.style.cursor = 'pointer';
-      closeBtn.onclick = () => {
-        document.body.removeChild(iframe);
-        document.body.removeChild(closeBtn);
-      };
+      closeBtn.style.cssText = `
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(255,255,255,0.2);
+        color: white;
+        border: none;
+        font-size: 30px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 10000;
+      `;
+      closeBtn.onclick = () => document.body.removeChild(container);
       
-      document.body.appendChild(iframe);
-      document.body.appendChild(closeBtn);
+      container.appendChild(iframe);
+      container.appendChild(closeBtn);
+      document.body.appendChild(container);
+      
+      // Request fullscreen on the iframe after a slight delay
+      setTimeout(() => {
+        if (iframe.requestFullscreen) {
+          iframe.requestFullscreen();
+        }
+      }, 100);
     } else {
       // Desktop: keep modal
       router.push(`/work/${project.id}`);
@@ -76,9 +96,10 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
             style={{ objectFit: 'cover' }}
-            quality={90}
-            priority={index < 6}
-            unoptimized={false}
+            quality={85}
+            loading={index < 6 ? "eager" : "lazy"}
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
           />
           <div className={styles.projectOverlay} />
           <div className={styles.projectInfo}>
