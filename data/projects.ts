@@ -5,6 +5,7 @@ export interface Project {
   subtitle: string;
   thumbnail: string;
   vimeoId?: string;
+  vimeoHash?: string;
   images?: string[];
   categories?: ('director' | 'producer' | 'narrative' | 'commercial')[];
 }
@@ -89,6 +90,7 @@ export const projects: Project[] = [
     subtitle: 'BROADCAST COMMERCIAL',
     thumbnail: '/images/projects/morgan-and-morgan.jpg',
     vimeoId: '1105455760',
+    vimeoHash: '76a109f3a0',
     categories: ['producer', 'commercial'],
   },
   {
@@ -197,6 +199,7 @@ export const projects: Project[] = [
     subtitle: 'DOCUMENTARY',
     thumbnail: '/images/projects/dandy-farmer.jpg',
     vimeoId: '761643356',
+    vimeoHash: '9d2bf4859d',
     categories: ['director', 'narrative'],
   },
 ];

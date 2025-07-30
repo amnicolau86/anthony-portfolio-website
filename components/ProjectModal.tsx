@@ -73,7 +73,10 @@ export default function ProjectModal({
           {project.vimeoId && (
             <div className={styles.modalVideo}>
               <iframe
-                src={`https://player.vimeo.com/video/${project.vimeoId}?autoplay=1&title=0&byline=0&portrait=0&transcript=0&pip=0&watchlater=0`}
+                src={project.vimeoHash 
+                  ? `https://player.vimeo.com/video/${project.vimeoId}?h=${project.vimeoHash}&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&title=0&byline=0&portrait=0`
+                  : `https://player.vimeo.com/video/${project.vimeoId}?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&title=0&byline=0&portrait=0`
+                }
                 style={{ width: '100%', height: '100%' }}
                 frameBorder="0"
                 allow="autoplay; fullscreen"

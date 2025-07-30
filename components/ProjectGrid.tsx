@@ -66,7 +66,9 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
       
       // Create iframe with proper fullscreen parameters
       const iframe = document.createElement('iframe');
-      iframe.src = `https://player.vimeo.com/video/${project.vimeoId}?autoplay=1&autopause=0&background=0&fullscreen=1&playsinline=0`;
+      iframe.src = project.vimeoHash 
+        ? `https://player.vimeo.com/video/${project.vimeoId}?h=${project.vimeoHash}&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&fullscreen=1&playsinline=0`
+        : `https://player.vimeo.com/video/${project.vimeoId}?autoplay=1&autopause=0&background=0&fullscreen=1&playsinline=0`;
       iframe.style.cssText = `
         width: 100%;
         height: 100%;
