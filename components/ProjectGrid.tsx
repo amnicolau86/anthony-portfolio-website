@@ -157,29 +157,6 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
           handleVideoError();
         };
         
-        // Add close button
-        const closeBtn = document.createElement('button');
-        closeBtn.innerHTML = '×';
-        closeBtn.style.cssText = `
-          position: absolute;
-          top: 20px;
-          right: 20px;
-          background: rgba(255,255,255,0.2);
-          color: white;
-          border: none;
-          font-size: 30px;
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
-          cursor: pointer;
-          z-index: 10000;
-        `;
-        closeBtn.onclick = () => {
-          clearTimeout(loadTimeout);
-          document.body.removeChild(container);
-          setActiveOverlay(null);
-        };
-        
         // Add swipe detection for back gesture
         let touchStartX = 0;
         let touchStartY = 0;
@@ -204,7 +181,6 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
         });
         
         container.appendChild(iframe);
-        container.appendChild(closeBtn);
         document.body.appendChild(container);
         
         // Request fullscreen on the iframe after a slight delay
