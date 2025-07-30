@@ -17,10 +17,43 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
     const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
     
     if (isMobile && project.vimeoId) {
-      // Open Vimeo directly in fullscreen on mobile
-      window.open(`https://vimeo.com/${project.vimeoId}`, '_blank');
+      // Create a fullscreen iframe player instead of redirecting
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://player.vimeo.com/video/${project.vimeoId}?autoplay=1&playsinline=0`;
+      iframe.style.position = 'fixed';
+      iframe.style.top = '0';
+      iframe.style.left = '0';
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.style.zIndex = '9999';
+      iframe.style.border = 'none';
+      iframe.setAttribute('allowfullscreen', 'true');
+      iframe.setAttribute('allow', 'autoplay; fullscreen');
+      
+      // Add close button
+      const closeBtn = document.createElement('button');
+      closeBtn.innerHTML = '×';
+      closeBtn.style.position = 'fixed';
+      closeBtn.style.top = '20px';
+      closeBtn.style.right = '20px';
+      closeBtn.style.zIndex = '10000';
+      closeBtn.style.background = 'rgba(0,0,0,0.5)';
+      closeBtn.style.color = 'white';
+      closeBtn.style.border = 'none';
+      closeBtn.style.fontSize = '30px';
+      closeBtn.style.width = '50px';
+      closeBtn.style.height = '50px';
+      closeBtn.style.borderRadius = '50%';
+      closeBtn.style.cursor = 'pointer';
+      closeBtn.onclick = () => {
+        document.body.removeChild(iframe);
+        document.body.removeChild(closeBtn);
+      };
+      
+      document.body.appendChild(iframe);
+      document.body.appendChild(closeBtn);
     } else {
-      // Keep existing modal behavior for desktop
+      // Desktop: keep modal
       router.push(`/work/${project.id}`);
     }
   };
