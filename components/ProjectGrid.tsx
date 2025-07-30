@@ -95,63 +95,149 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
     const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
     
     if (isMobile && project.vimeoId) {
-      // Create fullscreen container with black background
-      const container = document.createElement('div');
-      container.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: black;
-        z-index: 9999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      `;
+      console.log('[Video Debug] Starting mobile video handler for:', project.title);
+      console.log('[Video Debug] Vimeo ID:', project.vimeoId);
+      console.log('[Video Debug] Has privacy hash:', !!project.vimeoHash);
       
-      // Create iframe with proper fullscreen parameters
-      const iframe = document.createElement('iframe');
-      iframe.src = project.vimeoHash 
-        ? `https://player.vimeo.com/video/${project.vimeoId}?h=${project.vimeoHash}&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&fullscreen=1&playsinline=0`
-        : `https://player.vimeo.com/video/${project.vimeoId}?autoplay=1&autopause=0&background=0&fullscreen=1&playsinline=0`;
-      iframe.style.cssText = `
-        width: 100%;
-        height: 100%;
-        border: none;
-      `;
-      iframe.setAttribute('allowfullscreen', 'true');
-      iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
-      
-      // Add close button
-      const closeBtn = document.createElement('button');
-      closeBtn.innerHTML = '×';
-      closeBtn.style.cssText = `
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        background: rgba(255,255,255,0.2);
-        color: white;
-        border: none;
-        font-size: 30px;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        cursor: pointer;
-        z-index: 10000;
-      `;
-      closeBtn.onclick = () => document.body.removeChild(container);
-      
-      container.appendChild(iframe);
-      container.appendChild(closeBtn);
-      document.body.appendChild(container);
-      
-      // Request fullscreen on the iframe after a slight delay
-      setTimeout(() => {
-        if (iframe.requestFullscreen) {
-          iframe.requestFullscreen();
-        }
-      }, 100);
+      try {
+        // Create fullscreen container with black background
+        const container = document.createElement('div');
+        container.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: black;
+          z-index: 9999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        `;
+        
+        // Add loading indicator
+        const loadingDiv = document.createElement('div');
+        loadingDiv.innerHTML = 'Loading video...';
+        loadingDiv.style.cssText = `
+          color: white;
+          font-size: 18px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        `;
+        container.appendChild(loadingDiv);
+        
+        // Create iframe with proper fullscreen parameters and all permissions
+        const iframe = document.createElement('iframe');
+        const vimeoUrl = project.vimeoHash 
+          ? `https://player.vimeo.com/video/${project.vimeoId}?h=${project.vimeoHash}&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&fullscreen=1&playsinline=0`
+          : `https://player.vimeo.com/video/${project.vimeoId}?autoplay=1&autopause=0&background=0&fullscreen=1&playsinline=0`;
+        
+        console.log('[Video Debug] Iframe URL:', vimeoUrl);
+        
+        iframe.src = vimeoUrl;
+        iframe.style.cssText = `
+          width: 100%;
+          height: 100%;
+          border: none;
+        `;
+        
+        // Add all possible permissions for maximum compatibility
+        iframe.setAttribute('allowfullscreen', 'true');
+        iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope; camera; microphone');
+        iframe.setAttribute('webkitallowfullscreen', 'true');
+        iframe.setAttribute('mozallowfullscreen', 'true');
+        iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms allow-presentation');
+        iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+        
+        let loadTimeout: NodeJS.Timeout;
+        let hasLoaded = false;
+        
+        // Success handler
+        iframe.onload = () => {
+          console.log('[Video Debug] Iframe loaded successfully');
+          hasLoaded = true;
+          clearTimeout(loadTimeout);
+          if (loadingDiv.parentNode) {
+            loadingDiv.remove();
+          }
+        };
+        
+        // Error handler
+        iframe.onerror = (error) => {
+          console.error('[Video Debug] Iframe error:', error);
+          clearTimeout(loadTimeout);
+          handleVideoError();
+        };
+        
+        // Timeout fallback (10 seconds)
+        loadTimeout = setTimeout(() => {
+          if (!hasLoaded) {
+            console.error('[Video Debug] Iframe load timeout');
+            handleVideoError();
+          }
+        }, 10000);
+        
+        const handleVideoError = () => {
+          console.log('[Video Debug] Falling back to Vimeo.com');
+          // Remove container
+          if (container.parentNode) {
+            document.body.removeChild(container);
+          }
+          
+          // Open Vimeo directly
+          const vimeoWebUrl = project.vimeoHash 
+            ? `https://vimeo.com/${project.vimeoId}/${project.vimeoHash}`
+            : `https://vimeo.com/${project.vimeoId}`;
+          
+          window.open(vimeoWebUrl, '_blank');
+        };
+        
+        // Add close button
+        const closeBtn = document.createElement('button');
+        closeBtn.innerHTML = '×';
+        closeBtn.style.cssText = `
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          background: rgba(255,255,255,0.2);
+          color: white;
+          border: none;
+          font-size: 30px;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          cursor: pointer;
+          z-index: 10000;
+        `;
+        closeBtn.onclick = () => {
+          clearTimeout(loadTimeout);
+          document.body.removeChild(container);
+        };
+        
+        container.appendChild(iframe);
+        container.appendChild(closeBtn);
+        document.body.appendChild(container);
+        
+        // Request fullscreen on the iframe after a slight delay
+        setTimeout(() => {
+          if (iframe.requestFullscreen) {
+            iframe.requestFullscreen().catch(err => {
+              console.log('[Video Debug] Fullscreen request failed:', err);
+            });
+          }
+        }, 100);
+        
+      } catch (error) {
+        console.error('[Video Debug] Critical error in video handler:', error);
+        // Fallback: open Vimeo.com
+        const vimeoWebUrl = project.vimeoHash 
+          ? `https://vimeo.com/${project.vimeoId}/${project.vimeoHash}`
+          : `https://vimeo.com/${project.vimeoId}`;
+        
+        window.open(vimeoWebUrl, '_blank');
+      }
     } else {
       // Desktop: keep modal
       router.push(`/work/${project.id}`);

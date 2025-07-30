@@ -409,6 +409,7 @@
   flex-direction: column;
   justify-content: center;
   margin: auto;
+  padding: 40px;
 }
 
 .modalVideoWrapper {
@@ -426,8 +427,8 @@
 
 .modalClose {
   position: absolute;
-  top: 40px;
-  right: 40px;
+  top: 0;
+  right: 0;
   background: none;
   border: none;
   color: white;
@@ -470,20 +471,37 @@
   right: -60px;
 }
 
+/* Medium screens - close button inside video */
+@media (max-width: 1400px) {
+  .modalClose {
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 4px;
+  }
+  
+  .modalContent {
+    padding: 20px;
+  }
+}
+
 /* Smaller screens modal adjustments */
 @media (max-width: 768px) {
   .modalVideoWrapper {
     max-height: 50vh;
   }
   
-  .modalClose {
-    top: 20px;
-    right: 20px;
-  }
-  
   .modalContent {
     width: 95%;
     height: 95vh;
+    padding: 20px;
+  }
+  
+  .modalClose {
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    padding: 8px;
   }
 }
 
