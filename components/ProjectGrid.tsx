@@ -208,9 +208,14 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
             container.requestFullscreen().catch(err => {
               console.log('[Video Debug] Container fullscreen request failed:', err);
             });
-          } else if ((container as any).webkitRequestFullscreen) {
-            // Safari on iOS
-            (container as any).webkitRequestFullscreen();
+          } else {
+            // Safari on iOS - use webkit prefix
+            const webkitContainer = container as HTMLDivElement & {
+              webkitRequestFullscreen?: () => void;
+            };
+            if (webkitContainer.webkitRequestFullscreen) {
+              webkitContainer.webkitRequestFullscreen();
+            }
           }
         }, 100);
         
