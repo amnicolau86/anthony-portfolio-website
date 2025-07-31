@@ -202,6 +202,18 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
         container.appendChild(iframe);
         document.body.appendChild(container);
         
+        // Request fullscreen on container after a small delay
+        setTimeout(() => {
+          if (container.requestFullscreen) {
+            container.requestFullscreen().catch(err => {
+              console.log('[Video Debug] Container fullscreen request failed:', err);
+            });
+          } else if ((container as any).webkitRequestFullscreen) {
+            // Safari on iOS
+            (container as any).webkitRequestFullscreen();
+          }
+        }, 100);
+        
         // Add touch listeners to iframe after it loads
         iframe.onload = () => {
           console.log('[Video Debug] Iframe loaded successfully');
