@@ -29,7 +29,7 @@ export default function About() {
               p. <a href="tel:636.485.6465">636.485.6465</a>
             </p>
             <p className={styles.contactLink}>
-              <a href="https://instagram.com/anthonymnicolau" rel="noopener noreferrer">@anthonymnicolau</a>
+              i. <a href="https://instagram.com/anthonymnicolau" rel="noopener noreferrer">@anthonymnicolau</a>
             </p>
           </div>
           

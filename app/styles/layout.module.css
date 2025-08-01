@@ -200,13 +200,13 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  margin-top: 15px;
+  margin-top: 20px;
 }
 
 .contactLink {
   font-size: var(--font-size-about);
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   transition: opacity var(--transition-fast);
 }
 
