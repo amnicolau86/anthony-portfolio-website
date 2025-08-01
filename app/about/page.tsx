@@ -10,7 +10,7 @@ export default function About() {
           </p>
           
           <p className={styles.paragraph}>
-            As a commercial director and producer, Anthony has collaborated with major brands including BMW, Spotify, Adidas, Dell, Cointreau, Maybelline, Lexus, Kellogg&apos;s, Rémy Martin, and the PGA. His recent brand film for Marriott Bonvoy&apos;s Le Méridien hotels earned five Telly Awards in 2025.
+            As a commercial producer and director, Anthony has collaborated with major brands including BMW, Spotify, Adidas, Dell, Cointreau, Maybelline, Lexus, Kellogg&apos;s, Rémy Martin, and the PGA. His recent brand film for Marriott Bonvoy&apos;s Le Méridien hotels earned five Telly Awards in 2025.
           </p>
           
           <p className={styles.paragraph}>
