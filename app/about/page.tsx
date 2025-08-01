@@ -6,7 +6,7 @@ export default function About() {
       <div className={`${styles.container} ${styles.aboutContainer}`}>
         <div className={styles.aboutText}>
           <p className={styles.paragraph}>
-            Anthony Nicolau is a Cuban-American director, producer and writer. Born and raised in the Midwest, he spent 15 years honing his craft in New York City before trading subway delays for mountain views in the Catskill Mountains just north of NYC. He creates award-winning narrative films that have screened at festivals nationally and internationally.
+            Anthony Nicolau is a Cuban-American director, producer and writer. Born and raised in the Midwest, he spent 15 years honing his craft in New York City before trading subway delays for mountain views in the Catskills just north of NYC. He creates award-winning narrative films that have screened at festivals nationally and internationally.
           </p>
           
           <p className={styles.paragraph}>
