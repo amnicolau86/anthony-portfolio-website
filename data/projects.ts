@@ -59,11 +59,11 @@ export const projects: Project[] = [
   {
     id: 'omada',
     title: 'OMADA HEALTH',
-    type: 'DIRECTOR',
+    type: 'PRODUCER & DIRECTOR',
     subtitle: 'BRAND FILM',
     thumbnail: '/images/projects/omada.jpg',
     vimeoId: '386298098',
-    categories: ['director', 'commercial'],
+    categories: ['producer', 'director', 'commercial'],
   },
   {
     id: 'corners',
