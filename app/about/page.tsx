@@ -32,6 +32,62 @@ export default function About() {
               <a href="https://instagram.com/anthonymnicolau" rel="noopener noreferrer">@anthonymnicolau</a>
             </p>
           </div>
+          
+          <div className={styles.awardsSection}>
+            <h3 className={styles.awardsTitle}>Awards & Recognition</h3>
+            
+            <div className={styles.awardsList}>
+              <div className={styles.awardItem}>
+                <span className={styles.awardYear}>2025</span>
+                Telly Awards (5 wins) — Marriott Bonvoy&apos;s Le Méridien
+              </div>
+              
+              <div className={styles.awardItem}>
+                <span className={styles.awardYear}>2024</span>
+                Vimeo Staff Pick — &ldquo;Push To Enter&rdquo;
+              </div>
+              
+              <div className={styles.awardItem}>
+                <span className={styles.awardYear}>2024</span>
+                Short of the Week — &ldquo;Push To Enter&rdquo;
+              </div>
+              
+              <div className={styles.awardItem}>
+                <span className={styles.awardYear}>2023</span>
+                Brooklyn Film Festival — &ldquo;Push To Enter&rdquo;
+              </div>
+              
+              <div className={styles.awardItem}>
+                <span className={styles.awardYear}>2022</span>
+                Sedona Film Festival — &ldquo;Monument&rdquo;
+              </div>
+              
+              <div className={styles.awardItem}>
+                <span className={styles.awardYear}>2022</span>
+                Nantucket Film Festival — &ldquo;Monument&rdquo;
+              </div>
+              
+              <div className={styles.awardItem}>
+                <span className={styles.awardYear}>2019</span>
+                Film Shortage — Daily Short Pick &ldquo;Corners&rdquo;
+              </div>
+              
+              <div className={styles.awardItem}>
+                <span className={styles.awardYear}>2019</span>
+                Stoney Brook International Film Festival — &ldquo;Corners&rdquo;
+              </div>
+              
+              <div className={styles.awardItem}>
+                <span className={styles.awardYear}>2017</span>
+                Sundance Film Festival — Short Film Connection Program — &ldquo;The Night Owl&rdquo;
+              </div>
+              
+              <div className={styles.awardItem}>
+                <span className={styles.awardYear}>2017</span>
+                St. Louis International Film Festival — &ldquo;The Night Owl&rdquo;
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </main>
