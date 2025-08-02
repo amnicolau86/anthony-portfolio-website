@@ -16,7 +16,7 @@ export const projects: Project[] = [
     title: 'PUSH TO ENTER',
     type: 'DIRECTOR & WRITER',
     subtitle: 'SHORT FILM',
-    thumbnail: 'https://res.cloudinary.com/dcqvu9wo7/image/upload/f_auto,q_auto/push-to-enter_hp6ghi.jpg',
+    thumbnail: 'https://res.cloudinary.com/dcqvu9wo7/image/upload/f_auto,q_auto/v1754169392/push-to-enter_hp6ghi.jpg',
     vimeoId: '900874220',
     categories: ['director', 'narrative'],
   },
