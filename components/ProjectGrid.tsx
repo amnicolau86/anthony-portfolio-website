@@ -285,8 +285,8 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
             style={{ objectFit: 'cover' }}
             quality={85}
-            loading={index < 6 ? "eager" : "lazy"}
-            priority={index < 3}
+            loading="lazy"
+            priority={index === 0}
           />
           <div className={styles.projectOverlay} />
           <div className={styles.projectInfo}>
