@@ -282,11 +282,15 @@ export default function ProjectGrid({ projects, activeFilter }: ProjectGridProps
             src={project.thumbnail}
             alt={project.title}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             style={{ objectFit: 'cover' }}
             quality={85}
-            loading="lazy"
-            priority={index === 0}
+            {...(index < 2 
+              ? { priority: true } 
+              : index < 6 
+                ? { loading: 'eager' as const }
+                : { loading: 'lazy' as const }
+            )}
           />
           <div className={styles.projectOverlay} />
           <div className={styles.projectInfo}>
