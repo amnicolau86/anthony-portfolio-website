@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200],
     imageSizes: [16, 32, 48, 64, 96],
     formats: ['image/webp'],
+    domains: ['res.cloudinary.com'],
   },
   async headers() {
     return [
@@ -17,7 +18,7 @@ const nextConfig: NextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://player.vimeo.com https://f.vimeocdn.com",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: https: blob:",
+              "img-src 'self' data: https: blob: https://res.cloudinary.com",
               "font-src 'self'",
               "connect-src 'self' https://vimeo.com https://player.vimeo.com https://f.vimeocdn.com wss://fresnel.vimeocdn.com",
               "media-src 'self' https://vimeo.com https://player.vimeo.com https://vod-progressive.akamaized.net blob:",
