@@ -360,8 +360,8 @@
   top: var(--nav-height);
   left: 0;
   right: 0;
-  background: rgba(48, 45, 45, 0.95);
-  backdrop-filter: blur(10px);
+  background: rgba(48, 45, 45, 0.8);
+  backdrop-filter: blur(8px);
   padding: 20px 24px;
   display: flex;
   flex-direction: column;
