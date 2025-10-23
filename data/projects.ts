@@ -50,7 +50,7 @@ export const projects: Project[] = [
   {
     id: 'pga-masters',
     title: 'PGA MASTERS',
-    type: 'PRODUCER',
+    type: 'POST PRODUCER',
     subtitle: 'BROADCAST COMMERCIAL',
     thumbnail: 'https://res.cloudinary.com/dcqvu9wo7/image/upload/q_auto:best,c_limit,w_2048,f_auto/v1754169398/pga-masters_xjrcao.jpg',
     vimeoId: '1105452016',
